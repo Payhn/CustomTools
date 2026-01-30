@@ -1,0 +1,35 @@
+1. Prompt the user to enter a MAC address.
+2. Save the entered MAC address to a variable, let's call it 'user_mac'.
+
+3. Initialize a boolean variable, e.g., 'continue_program', to True.
+
+4. While 'continue_program' is True, do the following:
+   a. Prompt the user to enter the last 2 octets of an IP address (assuming the first 2 octets are always '10.192.').
+   b. Save the entered IP octets to a variable, let's call it 'ip_octets'.
+
+   c. Read the SSH credentials (username and password) from a text file and store them in variables, e.g., 'ssh_username' and 'ssh_password'.
+
+   d. Establish an SSH connection to the switch using 'ip_octets' and the SSH credentials.
+      - You can use a Python library like Paramiko to handle the SSH connection.
+
+   e. Send the command "show fdb" over the SSH connection to the switch.
+   f. Capture the output of the "show fdb" command in a variable, let's call it 'switch_output'.
+
+   g. Split 'switch_output' into lines to process each line separately.
+
+   h. Loop through each line in 'switch_output':
+      i. Check if the line contains 'user_mac'.
+      ii. If a match is found, save that line to a variable, e.g., 'matching_line'.
+      iii. If no match is found, continue to the next line.
+
+   i. Close the SSH connection to the switch.
+
+   j. Check if a 'matching_line' was found:
+      i. If a match was found, display 'matching_line' to the user, indicating the switch port associated with the MAC address.
+      ii. If no match was found, inform the user that the MAC address was not found in the switch's FDB.
+
+   k. Ask the user if they want to continue checking another switch (Yes/No).
+   l. If the user chooses "No," set 'continue_program' to False to exit the loop.
+
+5. End the program.
+
