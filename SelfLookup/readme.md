@@ -1,0 +1,1 @@
+this is a reverse of the fdb searching. we will look at our network interfaces, note their name, ip, mac address, ask the user what device we want to look for, use python and connect via ssh to 10.10.3.1 then do the fdb searching method to find what switch my device is connected to

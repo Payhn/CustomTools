@@ -14,23 +14,30 @@ Dependencies:
 Usage:
 1. The user is prompted to enter a MAC address.
 2. If the MAC address is found in the local database, the script asks for the last two octets of an IP address.
-3. The script then reads SSH credentials from 'credentials.txt', establishes an SSH connection to the network device, and executes commands to retrieve port details.
+3. The script reads SSH credentials from the centralized 'credentials.txt' (in CustomTools root), establishes an SSH connection, and executes commands to retrieve port details.
 4. The user is given the option to continue with a new MAC address or exit the program.
 
 Note:
-- Ensure 'macdatabase.txt' and 'credentials.txt' are properly set up and accessible.
+- Ensure 'macdatabase.txt' is properly set up and accessible.
+- The credentials.txt file is located in the CustomTools root directory and is auto-created on first run.
+- Edit credentials.txt with your SSH username and password (one per line).
 - The IP structure and SSH commands are specific to the network setup and may need adjustments based on the network device's configuration.
 """
 
 import paramiko
 import csv
 import os
+import sys
 import time
 from datetime import datetime
+from pathlib import Path
 import urllib.request
 import json
-import sys
 import subprocess
+
+# Add parent directory to path to import credentials module
+sys.path.insert(0, str(Path(__file__).parent.parent))
+import credentials
 
 VERSION = "1.0.0"
 
@@ -102,8 +109,11 @@ def get_ssh_connection(switch_ip, ssh_connections):
             del ssh_connections[switch_ip]
 
     # Create new connection
-    with open('credentials.txt', 'r') as file:
-        ssh_username, ssh_password = file.read().strip().splitlines()
+    try:
+        ssh_username, ssh_password = credentials.load_credentials(create_if_missing=True)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        raise
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
