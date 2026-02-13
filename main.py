@@ -146,13 +146,15 @@ class ToolRunner:
 
     def run_bulk_update(self) -> None:
         """Run the Bulk Update tool with maintained connections."""
-        print("\n--- Bulk Update Tool ---")
-        print("Feature not yet implemented.")
-        print("This tool will:")
-        print("  - Connect to switches from a list")
-        print("  - Run commands on each switch")
-        print("  - Save results")
-        input("\nPress Enter to return to main menu...")
+        try:
+            from BulkCommands import integrated
+            integrated.run_interactive(self.conn_manager)
+        except ImportError as e:
+            print(f"Error: BulkCommands module not found: {e}")
+        except Exception as e:
+            print(f"Error running BulkCommands: {e}")
+            import traceback
+            traceback.print_exc()
 
     def run_self_lookup(self) -> None:
         """Run the Self Lookup tool with maintained connections."""
